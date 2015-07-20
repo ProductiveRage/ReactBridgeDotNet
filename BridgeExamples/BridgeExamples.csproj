@@ -31,7 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="TestComponent.cs" />
+    <Compile Include="Actions\TimePassedAction.cs" />
+    <Compile Include="Actions\RecordChangeAction.cs" />
+    <Compile Include="Stores\SimpleExampleStore.cs" />
+    <Compile Include="Components\InputRow.cs" />
     <Compile Include="Start.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

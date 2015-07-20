@@ -33,6 +33,10 @@
   <ItemGroup>
     <Compile Include="Attributes\HTMLAttributes.cs" />
     <Compile Include="Attributes\InputAttributes.cs" />
+    <Compile Include="Dispatcher\AppDispatcher.cs" />
+    <Compile Include="Dispatcher\DispatcherMessage.cs" />
+    <Compile Include="Dispatcher\MessageSourceOptions.cs" />
+    <Compile Include="Dispatcher\IDispatcherAction.cs" />
     <Compile Include="Events\EventTarget.cs" />
     <Compile Include="Events\FormEvent.cs" />
     <Compile Include="Events\InputEventTarget.cs" />

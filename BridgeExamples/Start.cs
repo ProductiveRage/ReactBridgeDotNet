@@ -1,5 +1,7 @@
 ﻿using Bridge.Html5;
 using Bridge.React;
+using BridgeExamples.Actions;
+using BridgeExamples.Stores;
 
 namespace BridgeExamples
 {
@@ -8,9 +10,14 @@ namespace BridgeExamples
         [Ready]
         public static void Main()
         {
-            React.Render(
-                TestComponent.New(new TestComponent.Props(label: "Name")),
-                Document.GetElementById("main")
+            var dispatcher = new AppDispatcher();
+            new SimpleExampleStore(
+                Document.GetElementById("main"),
+                dispatcher
+            );
+            Window.SetInterval(
+                () => dispatcher.HandleServerAction(new TimePassedAction()),
+                500
             );
         }
     }

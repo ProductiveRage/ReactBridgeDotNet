@@ -7,6 +7,6 @@ namespace Bridge.React
     public static class React
     {
         [Name("render")]
-        public static void Render(ReactElement element, Element container) { } // Implemented in React library
+        public extern static void Render(ReactElement element, Element container);
     }
 }

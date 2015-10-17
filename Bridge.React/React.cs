@@ -2,7 +2,7 @@
 
 namespace Bridge.React
 {
-    [Name("React")]
+    [Name("ReactDOM")]
     [Ignore]
     public static class React
     {

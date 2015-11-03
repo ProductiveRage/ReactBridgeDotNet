@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="Attributes\HTMLAttributes.cs" />
     <Compile Include="Attributes\InputAttributes.cs" />
+    <Compile Include="Dispatcher\DispatcherMessageExtensions.cs" />
     <Compile Include="Dispatcher\AppDispatcher.cs" />
     <Compile Include="Dispatcher\DispatcherMessage.cs" />
     <Compile Include="Dispatcher\MessageSourceOptions.cs" />

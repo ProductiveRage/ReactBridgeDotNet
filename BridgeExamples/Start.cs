@@ -1,6 +1,7 @@
 ﻿using Bridge.Html5;
 using Bridge.React;
 using BridgeExamples.Actions;
+using BridgeExamples.Components;
 using BridgeExamples.Stores;
 
 namespace BridgeExamples
@@ -11,10 +12,13 @@ namespace BridgeExamples
         public static void Main()
         {
             var dispatcher = new AppDispatcher();
-            new SimpleExampleStore(
-                Document.GetElementById("main"),
-                dispatcher
-            );
+            var store = new SimpleExampleStore(dispatcher);
+
+			React.Render(
+				new App(store, dispatcher),
+				Document.GetElementById("main")
+			);
+
             Window.SetInterval(
                 () => dispatcher.HandleServerAction(new TimePassedAction()),
                 500

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="Actions\TimePassedAction.cs" />
     <Compile Include="Actions\RecordChangeAction.cs" />
+    <Compile Include="Stores\SimpleExampleStoreViewModel.cs" />
     <Compile Include="Stores\SimpleExampleStore.cs" />
     <Compile Include="Components\InputRow.cs" />
     <Compile Include="Start.cs" />

@@ -1,21 +1,12 @@
 ﻿using System;
-using Bridge.Html5;
 using Bridge.React;
 
 namespace BridgeExamples.Components
 {
-    public class InputRow : Component<InputRow.Props>
+	public class InputRow : Component<InputRow.Props, object>
     {
-        public static ReactElement New(string label, string value, Action<string> onChange, string validationError, string className = "")
-        {
-            // July 2015: When the version of Bridge.net after 1.7 is released, the following
-            // line can be uncommented and the more verbose line below it remove
-            //return New<TestComponent>(
-            return Component<InputRow.Props>.New<InputRow>(
-                new Props(label, value, onChange, validationError, className)
-            );
-        }
-        private InputRow() { }
+        public InputRow(string label, string value, Action<string> onChange, string validationError, string className = "")
+			: base(new Props(label, value, onChange, validationError, className), null) { }
 
         public override ReactElement Render()
         {

@@ -56,7 +56,7 @@ namespace BridgeExamples.Stores
                 DOM.Div(
                     null,
                     DOM.H1(null, "React in Bridge.NET"),
-                    InputRow.New(
+                    new InputRow(
                         className: "example-input-row",
                         label: _viewModel.LastUpdated,
                         value: _viewModel.Message,

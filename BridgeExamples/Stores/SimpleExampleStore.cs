@@ -22,7 +22,7 @@ namespace BridgeExamples.Stores
 				var recordChange = message.Action as RecordChangeAction<SimpleExampleStoreViewModel>;
 				if (recordChange != null)
 				{
-					UserEdit(recordChange.Value);
+					_viewModel = recordChange.Value;
 					OnChange();
 					return;
 				}
@@ -38,14 +38,6 @@ namespace BridgeExamples.Stores
 
 		public event Action Change;
 		public SimpleExampleStoreViewModel State { get { return _viewModel; } }
-
-		private void UserEdit(SimpleExampleStoreViewModel viewModel)
-		{
-			if (viewModel == null)
-				throw new ArgumentNullException("viewModel");
-
-			_viewModel = viewModel;
-		}
 
 		private void OnChange()
 		{

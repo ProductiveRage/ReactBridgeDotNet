@@ -6,7 +6,7 @@ namespace BridgeExamples.Components
 	public class InputRow : Component<InputRow.Props, object>
     {
         public InputRow(string label, string value, Action<string> onChange, string validationError, string className = "")
-			: base(new Props(label, value, onChange, validationError, className), null) { }
+			: base(new Props(label, value, onChange, validationError, className)) { }
 
         public override ReactElement Render()
         {
@@ -49,7 +49,7 @@ namespace BridgeExamples.Components
             public string ClassName { get; private set; }
 
             /// <summary>
-            /// This will be null, blank or whitespace-only
+            /// This will never be null, blank or whitespace-only
             /// </summary>
             public string Label { get; private set; }
 

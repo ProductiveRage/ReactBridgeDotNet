@@ -11,7 +11,7 @@ namespace Bridge.React
 	{
 		private static object _reactComponentClass = null;
 		private readonly ReactElement _reactElement;
-		protected Component(TProps props, TState state)
+		protected Component(TProps props)
 		{
 			// For each derived class we need to create React component class, this is like a template for the form of the component - individual instances will be created by
 			// taking this template and using React.createElement to prepare a new element with the specified props. There should only be one React component class per unique

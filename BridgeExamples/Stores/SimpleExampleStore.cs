@@ -19,24 +19,24 @@ namespace BridgeExamples.Stores
 
 			_dispatcher.Register(message =>
 			{
-				var recordChange = message.Action as RecordChangeAction<SimpleExampleStoreViewModel>;
-				if (recordChange != null)
-				{
-					_viewModel = recordChange.Value;
-					OnChange();
-					return;
-				}
-
-				if (message.Action is TimePassedAction)
-				{
-					_viewModel = new SimpleExampleStoreViewModel(lastUpdated: DateTime.Now, message: _viewModel.Message, validationError: _viewModel.ValidationError);
-					OnChange();
-					return;
-				}
+				message
+					.If<RecordChangeAction<SimpleExampleStoreViewModel>>(action =>
+					{
+						_viewModel = action.Value;
+					})
+					.Else<TimePassedAction>(action =>
+					{
+						_viewModel = new SimpleExampleStoreViewModel(lastUpdated: DateTime.Now, message: _viewModel.Message, validationError: _viewModel.ValidationError);
+					})
+					.IfAnyMatched(OnChange);
 			});
 		}
 
 		public event Action Change;
+
+		/// <summary>
+		/// This will never be null
+		/// </summary>
 		public SimpleExampleStoreViewModel State { get { return _viewModel; } }
 
 		private void OnChange()

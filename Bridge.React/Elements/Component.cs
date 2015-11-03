@@ -3,10 +3,9 @@
 namespace Bridge.React
 {
 	/// <summary>
-	/// This provides a class which may be derived from in order to declare React components. Due to the way that React initialises components, it is important
-	/// that derived classes do not perform any logic or initialisation in their constructor, nor may they have any other configuration passed into their
-	/// constructor but that which is described by the props (and state, where applicable) data. The constructors will not be executed and so any logic
-	/// or member initialisation in there will be silenty ignored.
+	/// This provides a class which may be derived from in order to declare React components. Due to the way that React initialises components, it is important that derived classes
+	/// do not perform any logic or initialisation in their constructor, nor may they have any other configuration passed into their constructor but that which is described by the
+	/// props (and state, where applicable) data. The constructors will not be executed and so any logic or member initialisation in there will be silenty ignored.
 	/// </summary>
 	public abstract class Component<TProps, TState>
 	{

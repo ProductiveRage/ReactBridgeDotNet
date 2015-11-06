@@ -14,7 +14,7 @@ namespace BridgeExamples.Components
 				DOM.Span(new HTMLAttributes { ClassName = "label" }, props.Label),
                 DOM.Input(new InputAttributes
                 {
-                    OnChange = ev => props.OnChange(ev.CurrentTarget.ValueAsNumber.ToString()),
+                    OnChange = ev => props.OnChange(ev.CurrentTarget.Value),
 					Value = props.Value,
                 }),
 				DOM.Span(new HTMLAttributes { ClassName = "error" }, props.ValidationError)

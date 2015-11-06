@@ -1,10 +1,7 @@
-﻿using Bridge;
+﻿using Bridge.Html5;
 
 namespace Bridge.React
 {
     [ObjectLiteral]
-    public class HTMLAttributes
-    {
-        public string className;
+    public sealed class HTMLAttributes : Element { }
     }
-}

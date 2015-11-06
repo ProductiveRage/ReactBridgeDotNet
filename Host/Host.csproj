@@ -126,6 +126,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Global.asax" />
+    <Content Include="Script\ThirdParty\react-0.14.0.js" />
+    <Content Include="Script\ThirdParty\react-dom-0.14.0.js" />
     <Content Include="Styles\Styles.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -138,7 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Script\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

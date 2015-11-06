@@ -4,9 +4,9 @@ using Bridge.Html5;
 namespace Bridge.React
 {
     [ObjectLiteral]
-    public class InputAttributes : HTMLAttributes
+    public sealed class InputAttributes : InputElement
     {
-        public Action<FormEvent<InputEventTarget>> onChange;
-        public string value;
+		[Name("onchange")]
+		public new Action<EventFor<InputElement>> OnChange;
     }
 }

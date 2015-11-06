@@ -3,21 +3,21 @@ using Bridge.React;
 
 namespace BridgeExamples.Components
 {
-	public class InputRow : Component<InputRow.Props, object>
+    public class InputRow : Component<InputRow.Props, object>
     {
         public InputRow(string label, string value, Action<string> onChange, string validationError, string className = "")
 			: base(new Props(label, value, onChange, validationError, className)) { }
 
         public override ReactElement Render()
         {
-            return DOM.Div(new HTMLAttributes { className = props.ClassName },
-                DOM.Span(new HTMLAttributes { className = "label" }, props.Label),
+			return DOM.Div(new HTMLAttributes { ClassName = props.ClassName },
+				DOM.Span(new HTMLAttributes { ClassName = "label" }, props.Label),
                 DOM.Input(new InputAttributes
                 {
-                    onChange = ev => props.OnChange(ev.target.value),
-                    value = props.Value,
+                    OnChange = ev => props.OnChange(ev.CurrentTarget.ValueAsNumber.ToString()),
+					Value = props.Value,
                 }),
-                DOM.Span(new HTMLAttributes { className = "error" }, props.ValidationError)
+				DOM.Span(new HTMLAttributes { ClassName = "error" }, props.ValidationError)
             );
         }
 

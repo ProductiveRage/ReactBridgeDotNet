@@ -2,9 +2,9 @@
 
 namespace BridgeExamples.Stores
 {
-    public class SimpleExampleStoreViewModel
+    public sealed class SimpleExampleStoreViewModel
     {
-		public SimpleExampleStoreViewModel(DateTime lastUpdated, string message, string validationError)
+        public SimpleExampleStoreViewModel(DateTime lastUpdated, string message, string validationError)
         {
             if (message == null)
                 throw new ArgumentNullException("message");

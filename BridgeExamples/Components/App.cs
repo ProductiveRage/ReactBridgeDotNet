@@ -5,7 +5,7 @@ using BridgeExamples.Stores;
 
 namespace BridgeExamples.Components
 {
-	public class App : Component<App.Props, SimpleExampleStoreViewModel>
+	public class App : Component<App.Props, App.State>
 	{
 		public App(SimpleExampleStore store, AppDispatcher dispatcher) : base(new Props(store, dispatcher)) { }
 
@@ -13,12 +13,18 @@ namespace BridgeExamples.Components
 		protected override void ComponentWillUnmount() { props.Store.Change -= OnChange; }
 		private void OnChange()
 		{
-			SetState(props.Store.State);
-		}
+			SetState(new State(
+                props.Store.LastUpdated,
+                props.Store.Message,
+                props.Store.ValidationError
+            ));
+        }
 
 		public override ReactElement Render()
 		{
-			var state = this.state ?? props.Store.State;
+            if (this.state == null)
+                return null;
+
 			return DOM.Div(
 				null,
 				DOM.H1(null, "React in Bridge.NET"),
@@ -26,23 +32,13 @@ namespace BridgeExamples.Components
 					className: "example-input-row",
 					label: state.LastUpdated,
 					value: state.Message,
-					onChange: UpdateMessage,
+					onChange: value => props.Dispatcher.HandleViewAction(new MessageChangeAction(value)),
 					validationError: state.ValidationError
 				)
 			);
 		}
 
-		private void UpdateMessage(string message)
-		{
-			if (message == null)
-				throw new ArgumentNullException("message");
-
-			props.Dispatcher.HandleViewAction(RecordChangeAction.New(
-				new SimpleExampleStoreViewModel(lastUpdated: DateTime.Now, message: message, validationError: (message.Trim() == "") ? "Why no message??" : "")
-			));
-		}
-
-		public class Props
+		public sealed class Props
 		{
 			public Props(SimpleExampleStore store, AppDispatcher dispatcher)
 			{
@@ -65,5 +61,35 @@ namespace BridgeExamples.Components
 			/// </summary>
 			public AppDispatcher Dispatcher { get; private set; }
 		}
-	}
+
+        public sealed class State
+        {
+            public State(DateTime lastUpdated, string message, string validationError)
+            {
+                if (message == null)
+                    throw new ArgumentNullException("message");
+                if (validationError == null)
+                    throw new ArgumentNullException("validationError");
+
+                LastUpdated = lastUpdated.ToString("HH:mm:ss");
+                Message = message;
+                ValidationError = validationError;
+            }
+
+            /// <summary>
+            /// This will never be null
+            /// </summary>
+            public string LastUpdated { get; private set; }
+
+            /// <summary>
+            /// This will never be null
+            /// </summary>
+            public string Message { get; private set; }
+
+            /// <summary>
+            /// This will never be null
+            /// </summary>
+            public string ValidationError { get; private set; }
+        }
+    }
 }

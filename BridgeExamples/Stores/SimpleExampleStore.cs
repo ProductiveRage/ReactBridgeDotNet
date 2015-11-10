@@ -7,37 +7,44 @@ namespace BridgeExamples.Stores
 	public class SimpleExampleStore
 	{
 		private readonly AppDispatcher _dispatcher;
-		private SimpleExampleStoreViewModel _viewModel;
 		public SimpleExampleStore(AppDispatcher dispatcher)
 		{
 			if (dispatcher == null)
 				throw new ArgumentNullException("dispatcher");
 
 			_dispatcher = dispatcher;
-			_viewModel = new SimpleExampleStoreViewModel(lastUpdated: DateTime.Now, message: "Hi!", validationError: "");
-			OnChange();
+
+            LastUpdated = DateTime.Now;
+            Message = "Hi!";
+            ValidationError = "";
 
 			_dispatcher.Register(message =>
 			{
 				message
-					.If<RecordChangeAction<SimpleExampleStoreViewModel>>(action =>
-					{
-						_viewModel = action.Value;
-					})
-					.Else<TimePassedAction>(action =>
-					{
-						_viewModel = new SimpleExampleStoreViewModel(lastUpdated: DateTime.Now, message: _viewModel.Message, validationError: _viewModel.ValidationError);
-					})
+                    .If<StoreInitialisedAction>(action => { }) // TODO: Explain
+                    .Else<MessageChangeAction>(action =>
+                    {
+                        Message = action.Value;
+                        ValidationError = (action.Value.Trim() == "") ? "Why no message??" : "";
+                    })
+					.Else<TimePassedAction>(action => LastUpdated = DateTime.Now)
 					.IfAnyMatched(OnChange);
 			});
 		}
 
 		public event Action Change;
 
-		/// <summary>
-		/// This will never be null
-		/// </summary>
-		public SimpleExampleStoreViewModel State { get { return _viewModel; } }
+        public DateTime LastUpdated { get; private set; }
+
+        /// <summary>
+        /// This will never be null
+        /// </summary>
+        public string Message { get; private set; }
+
+        /// <summary>
+        /// This will never be null
+        /// </summary>
+        public string ValidationError { get; private set; }
 
 		private void OnChange()
 		{

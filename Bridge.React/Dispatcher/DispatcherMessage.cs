@@ -2,7 +2,7 @@
 
 namespace Bridge.React
 {
-    public class DispatcherMessage
+    public sealed class DispatcherMessage
     {
         public DispatcherMessage(MessageSourceOptions source, IDispatcherAction action)
         {

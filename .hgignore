@@ -33,5 +33,5 @@ _ReSharper*/
 *.resharper
 *.orig
 [Pp]ackages/
-Script/*.js
+Host/Script/Generated/
 .vs/

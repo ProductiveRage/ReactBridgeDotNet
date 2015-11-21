@@ -2,7 +2,7 @@
 
 namespace Bridge.React
 {
-    public class AppDispatcher
+    public sealed class AppDispatcher
     {
         private event Action<DispatcherMessage> _dispatcher;
 

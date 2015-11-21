@@ -14,6 +14,16 @@ namespace Bridge.React
 			return new DispatcherMessageMatcher(message).Else(work);
 		}
 
+        /// <summary>
+        /// This will execute the specified callback with a non-null reference if the current DispatcherMessage action matches type T and
+        /// if that instance of T meets the specified conditions. It will never call the work action with a null reference and it will never
+        /// return a null reference. It will throw an exception for a null DispatcherMessage, null condition or null work reference.
+        /// </summary>
+        public static IMatchDispatcherMessages If<T>(this DispatcherMessage message, Func<T, bool> condition, Action<T> work) where T : class
+        {
+            return new DispatcherMessageMatcher(message).Else(condition, work);
+        }
+
 		public interface IMatchDispatcherMessages
 		{
 			/// <summary>
@@ -24,6 +34,13 @@ namespace Bridge.React
 			IMatchDispatcherMessages Else<T>(Action<T> work) where T : class;
 
 			/// <summary>
+            /// This will execute the specified callback with a non-null reference if the current DispatcherMessage action matches type T and
+            /// if that instance of T meets the specified conditions. It will never call the work action with a null reference and it will never
+            /// return a null reference. It will throw an exception for a null DispatcherMessage, null condition or null work reference.
+            /// </summary>
+            IMatchDispatcherMessages Else<T>(Func<T, bool> condition, Action<T> work) where T : class;
+
+            /// <summary>
 			/// If any DispatcherMessage action has been matched then the specified callback will be executed, if not then it will not be.
 			/// This will throw an exception for a null work reference.
 			/// </summary>
@@ -42,11 +59,24 @@ namespace Bridge.React
 
 			public IMatchDispatcherMessages Else<T>(Action<T> work) where T : class
 			{
+                return ElseWithOptionalCondition(null, work);
+            }
+
+            public IMatchDispatcherMessages Else<T>(Func<T, bool> condition, Action<T> work) where T : class
+            {
+                if (condition == null)
+                    throw new ArgumentNullException("condition");
+
+                return ElseWithOptionalCondition(condition, work);
+            }
+
+            private IMatchDispatcherMessages ElseWithOptionalCondition<T>(Func<T, bool> optionalCondition, Action<T> work) where T : class
+            {
 				if (work == null)
 					throw new ArgumentNullException("work");
 
 				var actionOfDesiredType = _message.Action as T;
-				if (actionOfDesiredType == null)
+                if ((actionOfDesiredType == null) || ((optionalCondition != null) && !optionalCondition(actionOfDesiredType)))
 					return this;
 
 				work(actionOfDesiredType);
@@ -75,6 +105,15 @@ namespace Bridge.React
 					throw new ArgumentNullException("work");
 				return this;
 			}
+
+            public IMatchDispatcherMessages Else<T>(Func<T, bool> condition, Action<T> work) where T : class
+            {
+                if (condition == null)
+                    throw new ArgumentNullException("condition");
+                if (work == null)
+                    throw new ArgumentNullException("work");
+                return this;
+            }
 
 			public void IfAnyMatched(Action work)
 			{

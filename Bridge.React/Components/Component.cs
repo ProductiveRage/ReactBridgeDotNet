@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Bridge.React
 {
@@ -11,7 +12,36 @@ namespace Bridge.React
 	{
 		private static object _reactComponentClass = null;
 		private readonly ReactElement _reactElement;
-		protected Component(TProps props)
+		protected Component(TProps props, params ReactElementOrText[] children)
+		{
+            if (children != null)
+            {
+                if (children.Any(element => element == null))
+                    throw new ArgumentException("Null reference encountered in children set");
+            }
+
+            // To ensure that a single "template" (ie. React component) is created per unique class, a static "_reactComponentClass" reference is maintained. When this is
+            // null, for the first instantiation of any particular component class, it will be populated and then re-used for any further component instances. To avoid
+            // relying upon the undocumented internal Bridge semantics around static variables, a local "reactComponentClass" is set to the static reference in C# code,
+            // this is then configured in JavaScript if found to be null (and then the static reference is updated again in C# after the JavaScript code has run, ensuring
+            // that the static property is updated without the code here having to worry about how Bridge deals with statics under the hood)
+            var reactComponentClass = _reactComponentClass;
+			if (reactComponentClass == null)
+			{
+				// Set the local "reactComponentClass" reference so that the static property can then be set by C# code (this avoids us having to know how Bridge deals with
+				// static references internally when we call React.createElement below)
+				reactComponentClass = CreateReactComponentClass();
+				_reactComponentClass = reactComponentClass;
+			}
+
+            // Now that the React component class is certain to have been defined (once per unique C# component class), this instance requires a React element to be created
+            // for it. The internal React mechanism means that the component's constructor will not be executed, which is why ALL state and configuration options for a
+            // component must be contained within the props (and state, where appropriate).
+            Func<TProps, ComponentHelpers<TProps>.WrappedProps> wrapProps = ComponentHelpers<TProps>.WrapProps; // Grab an alias to this for calling from JavaScript below
+            _reactElement = Script.Write<ReactElement>("React.createElement(reactComponentClass, wrapProps(props), children)");
+		}
+
+		private object CreateReactComponentClass()
 		{
 			// For each derived class we need to create React component class, this is like a template for the form of the component - individual instances will be created by
 			// taking this template and using React.createElement to prepare a new element with the specified props. There should only be one React component class per unique
@@ -32,66 +62,51 @@ namespace Bridge.React
 			// rather than merging it with whatever data is already there is - I think - the least surprising approach when considered in terms of C#; it makes more sense to
 			// replace the current data with the new reference, rather than merge - merging is not a common action in C#, though it is in JavaScript (eg. merging default
 			// "options" with any explicit settings in many JavaScript APIs).
-			// - To ensure that a single "template" (ie. React component) is created per unique class, a static "_reactComponentClass" reference is maintained. When this is
-			//   null, for the first instantiation of any particular component class, it will be populated and then re-used for any further component instances. To avoid
-			//   relying upon the undocumented internal Bridge semantics around static variables, a local "reactComponentClass" is set to the static reference in C# code,
-			//   this is then configured in JavaScript if found to be null (and then the static reference is updated again in C# after the JavaScript code has run, ensuring
-			//   that the static property is updated without the code here having to worry about how Bridge deals with statics under the hood)
-			var reactComponentClass = _reactComponentClass;
-			if (reactComponentClass == null)
-			{
-				var className = this.GetClassName();
-				/*@
-				var bridgeComponentInstance = this;
-				bridgeComponentInstance.displayName = className; // This is used by the React dev tools extension
+			var className = this.GetClassName().Split(".").Last();
+			object reactComponentClass = null;
+			/*@
+			var bridgeComponentInstance = this;
+			bridgeComponentInstance.displayName = className; // This is used by the React dev tools extension
                 
-				// Copy over all functions that may be needed first (ignoring the constructor since copying that causes a Reacts warning and because the constructor will not
-				// be used when createElement initialises new element instances)..
-				for (var i in bridgeComponentInstance) {
-					if (i === 'constructor') {
-						continue;
-					}
-					bridgeComponentInstance[i] = bridgeComponentInstance[i];
+			// Copy over all functions that may be needed first (ignoring the constructor since copying that causes a Reacts warning and because the constructor will not
+			// be used when createElement initialises new element instances)..
+			for (var i in bridgeComponentInstance) {
+				if (i === 'constructor') {
+					continue;
 				}
-
-				// .. then overwrite the functions that need special treatment (lifecycle functions involving props and/or state)
-				var getInitialState = bridgeComponentInstance.getInitialState;
-				bridgeComponentInstance.getInitialState = function (state) {
-					return { value: getInitialState() };
-				};
-				var componentWillReceiveProps = bridgeComponentInstance.componentWillReceiveProps;
-				bridgeComponentInstance.componentWillReceiveProps = function (nextProps) {
-					componentWillReceiveProps(nextProps ? nextProps.value : nextProps);
-				};
-				var shouldComponentUpdate = bridgeComponentInstance.shouldComponentUpdate;
-				bridgeComponentInstance.shouldComponentUpdate = function (nextProps, nextState) {
-					return shouldComponentUpdate(nextProps ? nextProps.value : nextProps, nextState ? nextState.value : nextState);
-				};
-				var componentWillUpdate = bridgeComponentInstance.componentWillUpdate;
-				bridgeComponentInstance.componentWillUpdate = function (nextProps, nextState) {
-					componentWillUpdate(nextProps ? nextProps.value : nextProps, nextState ? nextState.value : nextState);
-				};
-				var componentDidUpdate = bridgeComponentInstance.componentDidUpdate;
-				bridgeComponentInstance.componentDidUpdate = function (previousProps, previousState) {
-					componentDidUpdate(previousProps ? previousProps.value : previousProps, previousState ? previousState.value : previousState);
-				};
-
-				// Set the local "reactComponentClass" reference so that the static property can be set by C# code below
-				reactComponentClass = React.createClass(bridgeComponentInstance);
-				*/
-				_reactComponentClass = reactComponentClass;
+				bridgeComponentInstance[i] = bridgeComponentInstance[i];
 			}
 
-			// Now that the React component class is certain to have been defined (once per unique C# component class), this instance requires a React element to be created
-			// for it. The internal React mechanism means that the component's constructor will not be executed, which is why ALL state and configuration options for a
-			// component must be contained within the props (and state, where appropriate).
-			_reactElement = Script.Write<ReactElement>("React.createElement(reactComponentClass, { value: props })");
+			// .. then overwrite the functions that need special treatment (lifecycle functions involving props and/or state)
+			var getInitialState = bridgeComponentInstance.getInitialState;
+			bridgeComponentInstance.getInitialState = function (state) {
+				return { value: getInitialState() };
+			};
+			var componentWillReceiveProps = bridgeComponentInstance.componentWillReceiveProps;
+			bridgeComponentInstance.componentWillReceiveProps = function (nextProps) {
+				componentWillReceiveProps(nextProps ? nextProps.value : nextProps);
+			};
+			var shouldComponentUpdate = bridgeComponentInstance.shouldComponentUpdate;
+			bridgeComponentInstance.shouldComponentUpdate = function (nextProps, nextState) {
+				return shouldComponentUpdate(nextProps ? nextProps.value : nextProps, nextState ? nextState.value : nextState);
+			};
+			var componentWillUpdate = bridgeComponentInstance.componentWillUpdate;
+			bridgeComponentInstance.componentWillUpdate = function (nextProps, nextState) {
+				componentWillUpdate(nextProps ? nextProps.value : nextProps, nextState ? nextState.value : nextState);
+			};
+			var componentDidUpdate = bridgeComponentInstance.componentDidUpdate;
+			bridgeComponentInstance.componentDidUpdate = function (previousProps, previousState) {
+				componentDidUpdate(previousProps ? previousProps.value : previousProps, previousState ? previousState.value : previousState);
+			};
+			reactComponentClass = React.createClass(bridgeComponentInstance);
+			*/
+			return reactComponentClass;
 		}
 
-		/// <summary>
-		/// Props is not used by all components and so this may be null
-		/// </summary>
-		protected TProps props
+        /// <summary>
+        /// Props is not used by all components and so this may be null
+        /// </summary>
+        protected TProps props
 		{
 			// If props is non-null then it needs to be "unwrapped" when the C# code requests it
 			get { return Script.Write<TProps>("this.props ? this.props.value : null"); }
@@ -106,7 +121,15 @@ namespace Bridge.React
 			get { return Script.Write<TState>("this.state ? this.state.value : null"); }
 		}
 
-		public static implicit operator ReactElement(Component<TProps, TState> component)
+        /// <summary>
+        /// This will never be null nor contain any null references, though it may be empt if there are children to render
+        /// </summary>
+        protected ReactElementOrText[] Children
+        {
+            get { return Script.Write<ReactElementOrText[]>("this.props && this.props.children ? this.props.children : []"); }
+        }
+
+        public static implicit operator ReactElement(Component<TProps, TState> component)
 		{
 			if (component == null)
 				throw new ArgumentNullException("component");

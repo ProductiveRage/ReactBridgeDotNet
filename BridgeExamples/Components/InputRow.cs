@@ -10,14 +10,14 @@ namespace BridgeExamples.Components
 
         public override ReactElement Render()
         {
-			return DOM.Div(new HTMLAttributes { ClassName = props.ClassName },
-				DOM.Span(new HTMLAttributes { ClassName = "label" }, props.Label),
+			return DOM.Div(new Attributes { ClassName = props.ClassName },
+				DOM.Span(new Attributes { ClassName = "label" }, props.Label),
                 DOM.Input(new InputAttributes
                 {
                     OnChange = ev => props.OnChange(ev.CurrentTarget.Value),
 					Value = props.Value,
                 }),
-				DOM.Span(new HTMLAttributes { ClassName = "error" }, props.ValidationError)
+				DOM.Span(new Attributes { ClassName = "error" }, props.ValidationError)
             );
         }
 

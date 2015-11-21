@@ -1,14 +1,10 @@
-﻿namespace Bridge.React
+﻿using Bridge.Html5;
+
+namespace Bridge.React
 {
     [Ignore]
-    public class FormEvent : SyntheticEvent
+    public sealed class FormEvent<TCurrentTarget> : SyntheticEvent<TCurrentTarget> where TCurrentTarget : Element
     {
-        public EventTarget target;
-    }
-
-    [Ignore]
-    public class FormEvent<T> : FormEvent where T : EventTarget
-    {
-        public new T target;
+        private FormEvent() { }
     }
 }

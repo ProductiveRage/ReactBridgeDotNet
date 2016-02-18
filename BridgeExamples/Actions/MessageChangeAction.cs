@@ -3,7 +3,7 @@ using Bridge.React;
 
 namespace BridgeExamples.Actions
 {
-	public class MessageChangeAction : IDispatcherAction
+	public sealed class MessageChangeAction : IDispatcherAction
 	{
 		public MessageChangeAction(string value)
 		{

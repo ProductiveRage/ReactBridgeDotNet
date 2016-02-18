@@ -9,7 +9,7 @@ namespace BridgeExamples.Actions
     /// example application, there is no router and there is only a single Store, but this action is still useful in that it kicks everything off after all
     /// of the dependencies have been initialised.
     /// </summary>
-	public class StoreInitialisedAction : IDispatcherAction
+	public sealed class StoreInitialisedAction : IDispatcherAction
 	{
 		public StoreInitialisedAction(object store)
 		{

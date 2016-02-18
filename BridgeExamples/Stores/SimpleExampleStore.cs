@@ -4,7 +4,7 @@ using BridgeExamples.Actions;
 
 namespace BridgeExamples.Stores
 {
-	public class SimpleExampleStore
+	public sealed class SimpleExampleStore
 	{
 		private readonly AppDispatcher _dispatcher;
 		public SimpleExampleStore(AppDispatcher dispatcher)

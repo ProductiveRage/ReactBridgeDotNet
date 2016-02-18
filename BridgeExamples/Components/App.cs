@@ -5,7 +5,7 @@ using BridgeExamples.Stores;
 
 namespace BridgeExamples.Components
 {
-	public class App : Component<App.Props, App.State>
+	public sealed class App : Component<App.Props, App.State>
 	{
 		public App(SimpleExampleStore store, AppDispatcher dispatcher) : base(new Props(store, dispatcher)) { }
 

@@ -4,7 +4,7 @@ using BridgeExamples.Actions;
 
 namespace BridgeExamples.Stores
 {
-	public class SimpleExampleStore
+	public sealed class SimpleExampleStore
 	{
 		private readonly AppDispatcher _dispatcher;
 		public SimpleExampleStore(AppDispatcher dispatcher)
@@ -21,8 +21,7 @@ namespace BridgeExamples.Stores
 			_dispatcher.Register(message =>
 			{
 				message
-                    .If<StoreInitialisedAction>(action => { }) // TODO: Explain
-                    .Else<MessageChangeAction>(action =>
+                    .If<MessageChangeAction>(action =>
                     {
                         Message = action.Value;
                         ValidationError = (action.Value.Trim() == "") ? "Why no message??" : "";

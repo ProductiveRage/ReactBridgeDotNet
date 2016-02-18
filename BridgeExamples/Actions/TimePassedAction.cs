@@ -2,5 +2,5 @@
 
 namespace BridgeExamples.Actions
 {
-    public class TimePassedAction : IDispatcherAction { }
+    public sealed class TimePassedAction : IDispatcherAction { }
 }

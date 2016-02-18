@@ -4,8 +4,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeExamples", "BridgeExamples\BridgeExamples.csproj", "{3F956307-51EC-4159-A800-35BBD9DC0A4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.React", "Bridge.React\Bridge.React.csproj", "{4E50407C-DA7D-4D3D-B03D-87671C03F54E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{F6E62CA3-D791-48D5-B63C-3494EBD80C19}"
 EndProject
 Global
@@ -18,10 +16,6 @@ Global
 		{3F956307-51EC-4159-A800-35BBD9DC0A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F956307-51EC-4159-A800-35BBD9DC0A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F956307-51EC-4159-A800-35BBD9DC0A4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E50407C-DA7D-4D3D-B03D-87671C03F54E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E50407C-DA7D-4D3D-B03D-87671C03F54E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E50407C-DA7D-4D3D-B03D-87671C03F54E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E50407C-DA7D-4D3D-B03D-87671C03F54E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6E62CA3-D791-48D5-B63C-3494EBD80C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6E62CA3-D791-48D5-B63C-3494EBD80C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E62CA3-D791-48D5-B63C-3494EBD80C19}.Release|Any CPU.ActiveCfg = Release|Any CPU

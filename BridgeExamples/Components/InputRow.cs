@@ -3,7 +3,7 @@ using Bridge.React;
 
 namespace BridgeExamples.Components
 {
-    public sealed class InputRow : StatelessComponent<InputRow.Props>
+    public sealed class InputRow : PureComponent<InputRow.Props>
     {
         public InputRow(string label, string value, Action<string> onChange, string validationError, string className = "")
 			: base(new Props(label, value, onChange, validationError, className)) { }
